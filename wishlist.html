@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script type="text/javascript" src="index.js"></script>
+
+    <title>Letha</title>
+    <style type="text/css">
+      .wishlist-box {
+        width: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+        border: 2px solid black;
+        margin: 25px auto;
+        background-color: #ffffff;
+        border-radius: 25px;
+        font-weight: bold;
+      }
+      .wishlist-image {
+        width: 100px;
+      }
+      .count-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: 5px;
+      }
+      .count-container > * {
+        margin: 0 2px;
+      }
+      #wishlist-wrapper {
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+      }
+      #wishlist-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header-container">
+      <a href="index.html"> <img src="letha_logo.png" alt="logo"/></a>
+      <h1>Letha, Handcrafted Leather Shoes</h1>
+    </div>
+    <nav id="nav"></nav>
+    <div id="wishlist-container"></div>
+  </body>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      makeWishlist();
+    });
+
+    async function makeWishlist() {
+      const wishlist = getWishlist() || {};
+
+      const shoes = await loadShoes();
+      const ids = Object.keys(wishlist);
+      const wishlistContainer = document.getElementById('wishlist-container');
+      wishlistContainer.innerHTML = '';
+
+      if (ids.length === 0) {
+        const wishlistBox = document.createElement('div');
+        wishlistBox.className = 'wishlist-box';
+        wishlistBox.innerText = 'Wishlist is empty';
+        wishlistContainer.appendChild(wishlistBox);
+      }
+
+      for (let i = 0; i < ids.length; i++) {
+        const wishlistBox = document.createElement('div');
+        wishlistBox.className = 'wishlist-box';
+        wishlistContainer.appendChild(wishlistBox);
+
+        const id = ids[i];
+        const count = wishlist[id];
+        const shoe = shoes.find(shoe => shoe.id == id);
+
+        const shoeImage = document.createElement('img');
+        shoeImage.className = 'wishlist-image';
+        shoeImage.src = shoe.imageUrl;
+        wishlistBox.appendChild(shoeImage);
+
+        const shoeName = document.createElement('div');
+        shoeName.className = 'wishlist-name';
+        shoeName.innerText = shoe.name;
+        wishlistBox.appendChild(shoeName);
+
+        const shoePrice = document.createElement('div');
+        shoePrice.className = 'wishlist-price';
+        shoePrice.innerText = shoe.price + '$';
+        wishlistBox.appendChild(shoePrice);
+
+        const removeFromWishlistButton = document.createElement('button');
+        removeFromWishlistButton.innerText = 'Remove';
+        removeFromWishlistButton.className = 'wishlist';
+        removeFromWishlistButton.addEventListener('click', function() {
+          removeFromWishlist(id);
+          makeWishlist();
+        });
+        wishlistBox.appendChild(removeFromWishlistButton);
+
+        const addtoCartButton = document.createElement('button');
+        addtoCartButton.className = 'shoe-cart';
+        addtoCartButton.innerText = 'Add to Cart';
+        addtoCartButton.addEventListener('click', function() {
+          addToCart(shoe.id);
+          removeFromWishlist(id);
+          makeWishlist();
+          alert('Succesfully added to cart');
+        });
+        wishlistBox.appendChild(addtoCartButton);
+      }
+    }
+  </script>
+</html>

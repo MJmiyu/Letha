@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script type="text/javascript" src="index.js"></script>
+    <title>Letha</title>
+  </head>
+  <body>
+    <div id="header-container">
+      <a href="index.html"> <img src="letha_logo.png" alt="logo"/></a>
+      <h1>Letha, Handcrafted Leather Shoes</h1>
+    </div>
+    <nav id="nav"></nav>
+    <div id="login-container">
+      <form id="signin-form">
+        <input
+          id="signin-username"
+          type="text"
+          placeholder="Username"
+          name="username"
+          required
+        />
+        <input
+          id="signin-password"
+          type="password"
+          placeholder="Password"
+          name="password"
+          required
+        />
+        <button id="signin-button" type="submit">Sign In</button>
+      </form>
+      <form id="register-form">
+        <input
+          id="register-username"
+          type="text"
+          placeholder="Username"
+          name="username"
+          required
+        />
+        <input
+          id="register-password"
+          type="password"
+          placeholder="Password"
+          name="password"
+          required
+        />
+        <button id="register-button" type="submit">Register</button>
+      </form>
+    </div>
+  </body>
+  <script type="text/javascript">
+    // javascript to add event listeners to forms, that will store username/passowrd in session storage
+    document.addEventListener('DOMContentLoaded', function() {
+      const signinForm = document.getElementById('signin-form');
+      signinForm.addEventListener('submit', function() {
+        const signinUsername = document.getElementById('signin-username');
+        const signinPassword = document.getElementById('signin-password');
+        const username = signinUsername.value;
+        const password = signinPassword.value;
+        setUser(username, password);
+        setLoginSuccess();
+      });
+
+      const registerForm = document.getElementById('register-form');
+      registerForm.addEventListener('submit', function() {
+        const registerUsername = document.getElementById('register-username');
+        const registerPassword = document.getElementById('register-password');
+        const username = registerUsername.value;
+        const password = registerPassword.value;
+        setUser(username, password);
+        setLoginSuccess();
+      });
+    });
+  </script>
+</html>

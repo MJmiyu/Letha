@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <script type="text/javascript" src="index.js"></script>
+
+    <title>Letha</title>
+    <style type="text/css">
+      .cart-box {
+        width: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+        border: 2px solid black;
+        margin: 25px auto;
+        background-color: #ffffff;
+        border-radius: 25px;
+        font-weight: bold;
+      }
+      .cart-image {
+        width: 100px;
+      }
+      .count-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: 5px;
+      }
+      .count-container > * {
+        margin: 0 2px;
+      }
+      #cart-wrapper {
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+      }
+      #cart-container {
+        width: 50%;
+        display: flex;
+        flex-wrap: wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header-container">
+      <a href="index.html"> <img src="letha_logo.png" alt="logo"/></a>
+      <h1>Letha, Handcrafted Leather Shoes</h1>
+    </div>
+    <nav id="nav"></nav>
+    <div id="cart-wrapper">
+      <div id="cart-container"></div>
+      <div id="checkout">
+        <form id="order-form">
+          <input type="text" placeholder="First Name" name="name" required />
+          <input type="text" placeholder="Last Name" name="name" required />
+          <input type="text" placeholder="Address" name="address" required />
+          <input
+            type="number"
+            placeholder="Card Number"
+            name="cardnumber"
+            required
+          />
+          <button type="submit">Order Now</button>
+        </form>
+      </div>
+    </div>
+  </body>
+  <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+      makeCart();
+      makeCheckout();
+    });
+
+    async function makeCart() {
+      const cart = getCart() || {};
+
+      const shoes = await loadShoes();
+      const ids = Object.keys(cart);
+      const cartContainer = document.getElementById('cart-container');
+      cartContainer.innerHTML = '';
+
+      if (ids.length === 0) {
+        const cartBox = document.createElement('div');
+        cartBox.className = 'cart-box';
+        cartBox.innerText = 'Cart is empty';
+        cartContainer.appendChild(cartBox);
+      }
+
+      for (let i = 0; i < ids.length; i++) {
+        const cartBox = document.createElement('div');
+        cartBox.className = 'cart-box';
+        cartContainer.appendChild(cartBox);
+
+        const id = ids[i];
+        const count = cart[id];
+        const shoe = shoes.find(shoe => shoe.id == id);
+
+        const shoeImage = document.createElement('img');
+        shoeImage.className = 'cart-image';
+        shoeImage.src = shoe.imageUrl;
+        cartBox.appendChild(shoeImage);
+
+        const shoeName = document.createElement('div');
+        shoeName.className = 'cart-name';
+        shoeName.innerText = shoe.name;
+        cartBox.appendChild(shoeName);
+
+        const shoePrice = document.createElement('div');
+        shoePrice.className = 'cart-price';
+        shoePrice.innerText = shoe.price + '$';
+        cartBox.appendChild(shoePrice);
+
+        const countContainer = document.createElement('div');
+        cartBox.appendChild(countContainer);
+        countContainer.className = 'count-container';
+
+        const cartMinus = document.createElement('button');
+        cartMinus.innerText = '-';
+        countContainer.appendChild(cartMinus);
+        cartMinus.addEventListener('click', function() {
+          removeFromCart(id);
+          makeCart();
+        });
+
+        const cartCount = document.createElement('div');
+        cartCount.innerText = count;
+        countContainer.appendChild(cartCount);
+
+        const cartPlus = document.createElement('button');
+        cartPlus.innerText = '+';
+        countContainer.appendChild(cartPlus);
+        cartPlus.addEventListener('click', function() {
+          addToCart(id);
+          makeCart();
+        });
+      }
+    }
+
+    function makeCheckout() {
+      const checkoutForm = document.getElementById('order-form');
+      checkoutForm.addEventListener('submit', function() {
+        alert('Order Succesfully Submitted');
+      });
+    }
+  </script>
+</html>
